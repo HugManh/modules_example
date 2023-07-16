@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
             mkdirSync(store)
         }
         cb(null, store)
-    },[]
+    },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
         cb(null, uniqueSuffix + '-' + shortid.generate() + '-' + file.originalname)
