@@ -1,0 +1,12 @@
+
+```shell
+cd api && npm install
+npm start
+```
+
+
+```shell
+cd client && npm install
+npm start
+```
+
