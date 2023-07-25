@@ -6,13 +6,14 @@ const fs = require('fs-extra')
 const multer = require("multer");
 const shortid = require("shortid")
 const path = require("path");
-const { mkdir, mkdirSync } = require('fs');
+const { mkdir, mkdirSync, createReadStream } = require('fs');
+// const { Transform } = require('node:stream');
 
 const store = path.join(path.dirname(__dirname), 'uploads')
 // Set storage on the local filesytem
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        if (!fs.existsSync(path)) {
+        if (!fs.existsSync(store)) {
             mkdirSync(store)
         }
         cb(null, store)
@@ -26,11 +27,24 @@ const upload = multer({ storage })
 
 app.use(cors())
 
-/** Process POST request with a mutter's middleware */
 app.post('/upload', upload.single('file'), function (req, res) {
     console.log(req.file);
-    res.send(JSON.stringify(req.file));
+    res.status(200).json({
+        message: "File uploaded successfully",
+        data: {
+            file_path: "uploads/" + req.file.filename,
+            file_url: "http://localhost:3000/" + req.file.filename
+        },
+        success: true,
+    })
 });
+
+app.get('/:name', upload.single('file'), function (req, res) {
+    const name = req.params['name']
+    console.log(name);
+    const readable = createReadStream(store + '/' + name);
+    readable.pipe(res)
+})
 
 const PORT = 3000
 /** Run the app */
