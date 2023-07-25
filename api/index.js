@@ -8,9 +8,11 @@ const shortid = require("shortid")
 const path = require("path");
 const { mkdir, mkdirSync, createReadStream } = require('fs');
 const timers = require('./times');
+const transform = require('./resize');
 
 const store = path.join(path.dirname(__dirname), 'storages')
-const pathTime = path.join(store, timers.unixTimestamp())
+const currenttime = timers.unixTimestamp()
+const pathTime = path.join(store, currenttime)
 
 // Set storage on the local filesytem
 const storage = multer.diskStorage({
@@ -36,18 +38,26 @@ app.post('/upload', upload.single('file'), function (req, res) {
     res.status(200).json({
         message: "File uploaded successfully",
         data: {
-            file_path: "storages/" + req.file.filename,
-            file_url: "http://localhost:3000/" + req.file.filename
+            file_path: currenttime + '/' + req.file.filename,
+            file_url: "http://localhost:3000/" + currenttime + '/' + req.file.filename
         },
         success: true,
     })
 });
 
-app.get('/:name', upload.single('file'), function (req, res) {
+app.get('/:time/:name', upload.single('file'), function (req, res) {
     const name = req.params['name']
+    const time = req.params['time']
+    const { w, h } = req.query
+    let width, height
+    if (w) {
+        width = parseInt(w)
+    }
+    if (h) {
+        height = parseInt(h)
+    }
     console.log(name);
-    const readable = createReadStream(pathTime + '/' + name);
-    readable.pipe(res)
+    transform.resize(store + '/' + time + '/' + name, '', width, height).pipe(res);
 })
 
 const PORT = 3000
