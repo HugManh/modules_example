@@ -130,4 +130,4 @@ dist
 .pnp.*
 
 # Ignore storage directory on the local filesystem
-uploads/
+storages/
