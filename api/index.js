@@ -31,6 +31,28 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage })
 
+
+let fileNames = []
+function listDirection(dir, pa) {
+    if (!fs.existsSync(dir)) {
+        console.log("no dir ", dir)
+        return;
+    }
+    var files = fs.readdirSync(dir)
+    for (var i = 0; i < files.length; i++) {
+        var filename = path.join(dir, files[i]);
+        var test = pa + '/' + files[i];
+        console.log(test);
+        var stat = fs.lstatSync(filename);
+        if (stat.isDirectory()) {
+            listDirection(filename, test); //recurse
+        } else {
+            fileNames.push(test)
+        };
+    };
+}
+
+
 app.use(cors())
 
 app.post('/upload', upload.single('file'), function (req, res) {
@@ -58,6 +80,15 @@ app.get('/:time/:name', upload.single('file'), function (req, res) {
     }
     console.log(name);
     transform.resize(store + '/' + time + '/' + name, '', width, height).pipe(res);
+})
+
+app.get('/api/v1/images', function (req, res) {
+    fileNames = []
+    listDirection(store, "http://localhost:3000")
+    res.status(200).json({
+        message: "Get all images",
+        data: fileNames
+    })
 })
 
 const PORT = 3000
