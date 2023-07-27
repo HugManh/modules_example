@@ -29,12 +29,12 @@ function App() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
+        height: "50vh",
       }}>
         <Upload.Dragger
           // multiple
           listType="picture"
-          action={"http://localhost:3000/upload"}
+          action={"http://localhost:3000/api/v1/upload"}
           showUploadList={{ showRemoveIcon: true }}
           accept=".png,.jpeg,.doc"
           beforeUpload={(file) => {
