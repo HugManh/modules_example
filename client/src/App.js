@@ -8,6 +8,7 @@ import './gallery.css'
 function App() {
 
   const [allImage, setAllImage] = useState()
+  const [show, setShow] = useState(false)
 
   useEffect(() => {
     getImage()
@@ -35,16 +36,17 @@ function App() {
           // multiple
           listType="picture"
           action={"http://localhost:3000/api/v1/upload"}
-          showUploadList={{ showRemoveIcon: true }}
-          accept=".png,.jpeg,.doc"
+          showUploadList={!show ? false : { showRemoveIcon: true }}
+          accept=".png,.jpeg,.jpg,.doc"
           beforeUpload={(file) => {
             console.log({ file });
             return true;
           }}
           onChange={(file) => {
             const { status } = file.file;
-            if (status !== 'uploading') {
-              console.log(file.file, file.fileList);
+            if (status === 'uploading') {
+              console.log('uploading: ', file.file, file.fileList);
+              // message.loading(`${file.file.name} file uploading...`)
             }
 
             if (status === 'done') {
@@ -86,7 +88,7 @@ function App() {
           : allImage.map((data, index) => {
             return (
               <div className="pics" key={index}>
-                <img src={data} alt="image" style={{ width: '100%' }} />
+                <img src={data.url} alt={data.name} style={{ width: '100%' }} />
               </div>
             )
           })}

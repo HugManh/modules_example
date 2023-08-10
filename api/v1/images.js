@@ -1,55 +1,32 @@
 const router = require("express").Router();
-const fs = require('fs-extra')
-const multer = require("multer");
-const shortid = require("shortid")
+const fs = require('fs-extra');
 const path = require("path");
-const { mkdirSync } = require('fs');
 const timers = require('../modules/times');
 const transform = require('../modules/resize');
-
-const store = path.join(path.dirname(__dirname), 'storages')
-const currenttime = timers.unixTimestamp()
-const pathTime = path.join(store, currenttime)
-const _url = "http://localhost:3000/api/v1"
-
-// Set storage on the local filesytem
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        console.log(store);
-        if (!fs.existsSync(store)) {
-            mkdirSync(store)
-        }
-        if (!fs.existsSync(pathTime)) {
-            mkdirSync(pathTime)
-        }
-        cb(null, pathTime)
-    },
-    filename: function (req, file, cb) {
-        cb(null, shortid.generate() + '-' + file.originalname)
-    }
-})
-const upload = multer({ storage })
+const { upload } = require('../configs/storages');
+const store = path.join(path.dirname(__dirname), 'storages');
+const _url = "http://localhost:3000/api/v1";
+const currenttime = timers.unixTimestamp();
 
 
 let fileNames = []
 function listDirection(dir, pa) {
-    console.log(dir)
     if (!fs.existsSync(dir)) {
-        console.log("no dir ", dir)
+        console.error("Not exits directory: ", dir)
         return;
     }
-    var files = fs.readdirSync(dir)
-    for (var i = 0; i < files.length; i++) {
-        var filename = path.join(dir, files[i]);
-        var test = pa + '/' + files[i];
-        console.log(test);
-        var stat = fs.lstatSync(filename);
+    let files = fs.readdirSync(dir)
+    for (let i = 0; i < files.length; i++) {
+        let filename = path.join(dir, files[i]);
+        let _url = pa + '/' + files[i];
+        let stat = fs.lstatSync(filename);
         if (stat.isDirectory()) {
-            listDirection(filename, test); //recurse
+            listDirection(filename, _url); //recurse
         } else {
-            fileNames.push(test)
+            fileNames.push({ name: files[i], url: _url })
         };
     };
+    console.log('fileNames: ', fileNames);
 }
 
 
@@ -95,7 +72,5 @@ router
         console.log(name);
         transform.resize(store + '/' + time + '/' + name, '', width, height).pipe(res);
     })
-
-
 
 module.exports = router
