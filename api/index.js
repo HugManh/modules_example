@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors')
 
-const images = require("./v1/images")
+const images = require("./routes/v1/images")
 app.use(cors())
 
 app.use('/api/v1', images)

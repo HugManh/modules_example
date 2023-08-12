@@ -5,8 +5,8 @@ const multer = require("multer");
 const shortid = require("shortid");
 const { mkdirSync } = require('fs');
 const store = path.join(path.dirname(__dirname), 'storages');
-const currenttime = timers.unixTimestamp();
-const pathTime = path.join(store, currenttime);
+const _current_time = timers.unixTimestamp();
+const pathTime = path.join(store, _current_time);
 
 // Set storage on the local filesytem
 const storage = multer.diskStorage({
