@@ -6,6 +6,7 @@
   -moz-column-width: 20%;
   column-width: 20%;
   padding: 0 50px;
+  padding-bottom: 100px;
 }
 
 .gallery .pics {
