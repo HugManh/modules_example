@@ -1,12 +1,6 @@
 
-```shell
-cd api && npm install
-npm start
-```
+1. DIRECTORY STRUCTURE
 
-
-```shell
-cd client && npm install
-npm start
-```
-
+  gallery-dino/ ............. Top src dir
+  |-- client/ ............... Client
+  |-- server/ ............... Server
