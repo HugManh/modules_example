@@ -14,6 +14,3 @@ const PORT = 3000
 app.listen(PORT, () => {
     console.log("Starting server on port " + PORT + "...");
 })
-
-// Export the Express API
-module.exports = app;
