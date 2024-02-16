@@ -1,6 +1,6 @@
 const fse = require('fs-extra');
 const path = require("path");
-const { image, time } = require('../utils');
+const { time } = require('../utils');
 const store = path.join(path.dirname(__dirname), 'localData');
 const localData = path.join(path.dirname(__dirname), 'localMetadata', 'data.json');
 const _url = "http://localhost:3000/api/v1";
@@ -49,7 +49,8 @@ const imageCtrl = {
                 height = parseInt(h)
             }
             console.log(name);
-            image.resize(store + '/' + time + '/' + name, '', width, height).pipe(res);
+            // image.resize(store + '/' + time + '/' + name, '', width, height).pipe(res);
+            fs.createReadStream(store + '/' + time + '/' + name).pipe(res);
         } catch (error) {
             res.status(404).json({
                 message: "Get file: " + error,
