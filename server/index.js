@@ -20,5 +20,5 @@ const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
     text = "Starting server on port " + PORT + "..."
     console.log(text);
-    telegram.sendMessageToTelegram(text)
+    // telegram.sendMessageToTelegram(text)
 })

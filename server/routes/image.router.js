@@ -1,7 +1,11 @@
 const imageRoute = require("express").Router();
 const { upload } = require('../storage/localStorage');
 const { imageCtrl } = require("../controller");
+const { uploadCloud } = require("../storage/cloudinary");
 
+imageRoute
+    .route('/uploadImage')
+    .post(uploadCloud.single('file'), imageCtrl.uploadImage);
 imageRoute
     .route('/upload')
     .post(upload.single('file'), imageCtrl.upload);

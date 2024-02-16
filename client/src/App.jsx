@@ -5,6 +5,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import "./gallery.css";
 
+const apiUploadImage = process.env.API_ENDPOINT + "/api/v1/uploadImage";
+const apiGetAllImage = process.env.API_ENDPOINT + "/api/v1/images";
+
 function App() {
   const [allImage, setAllImage] = useState();
   const [image, setImage] = useState();
@@ -17,7 +20,7 @@ function App() {
 
   const getImage = async () => {
     try {
-      const result = await axios.get("http://localhost:3000/api/v1/images");
+      const result = await axios.get(apiGetAllImage);
       setAllImage(result.data.data);
     } catch (error) {
       console.log(error);
@@ -30,10 +33,7 @@ function App() {
     const fmData = new FormData();
     fmData.append("file", file);
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/v1/upload",
-        fmData
-      );
+      const res = await axios.post(apiUploadImage, fmData);
 
       onSuccess("Ok");
       console.log("server res: ", res.data.data.file_url);
@@ -68,7 +68,7 @@ function App() {
           <Upload
             multiple
             listType='picture-card'
-            // action={"http://localhost:3000/api/v1/upload"}
+            // action={apiUploadImage}
             customRequest={uploadImage}
             showUploadList={!show ? false : { showRemoveIcon: true }}
             accept='.png,.jpeg,.jpg,.doc'
