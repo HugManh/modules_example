@@ -11,3 +11,5 @@ const PORT = 3000
 /** Run the app */
 app.listen(PORT);
 console.log("Starting server on port 3000...");
+
+module.exports = app;
