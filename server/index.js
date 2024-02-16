@@ -4,10 +4,8 @@ const cors = require('cors')
 const { imageRoute } = require("./routes")
 app.use(cors())
 
-app.get("/", (req, res) => {
-    res.send("Hello World!");
-});
-app.use('/api/v1', imageRoute)
+
+app.use('api/v1', imageRoute)
 
 // Start the server
 const PORT = process.env.PORT || 3000
