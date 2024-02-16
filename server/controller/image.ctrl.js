@@ -1,7 +1,7 @@
 const fse = require('fs-extra');
 const path = require("path");
 const { time } = require('../utils');
-const cloudinary = require('../storage/cloudinary');
+const { uploadSingle } = require('../storage');
 const store = path.join(path.dirname(__dirname), 'localData');
 const localData = path.join(path.dirname(__dirname), 'localMetadata', 'data.json');
 const _url = "http://localhost:3000/api/v1";
@@ -13,15 +13,15 @@ const imageCtrl = {
             res.status(404).json({ message: "No file uploaded!", success: false });
         }
         try {
-            lists = await listDirection()
-            lists.push({ url: req.file.path, filename: req.file.originalname })
-            fse.writeFileSync(localData, JSON.stringify(lists))
-            res.json({
-                data: {
-                    file_url: req.file.path
-                },
-                success: true,
-            });
+            console.log("req.file.path: ", req.file);
+            uploadSingle(req.file).then((result) => {
+                console.log(result);
+                res.json({
+                    message: "File upload completed successfully",
+                    data: { secure_url: result.secure_url },
+                    success: true,
+                })
+            })
         } catch (error) {
             res.status(404).json({
                 message: "File upload: " + error,

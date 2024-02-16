@@ -1,19 +1,18 @@
 const imageRoute = require("express").Router();
-const { upload } = require('../storage/localStorage');
+const { uploadLocal, uploadMem } = require('../storage');
 const { imageCtrl } = require("../controller");
-const { uploadCloud } = require("../storage/cloudinary");
 
 imageRoute
     .route('/uploadImage')
-    .post(uploadCloud.single('file'), imageCtrl.uploadImage);
+    .post(uploadMem, imageCtrl.uploadImage);
 imageRoute
     .route('/upload')
-    .post(upload.single('file'), imageCtrl.upload);
+    .post(uploadLocal, imageCtrl.upload);
 imageRoute
     .route('/images')
     .get(imageCtrl.getAll)
 imageRoute
     .route('/:time/:name')
-    .get(upload.single('file'), imageCtrl.getByName)
+    .get(uploadLocal, imageCtrl.getByName)
 
 module.exports = imageRoute

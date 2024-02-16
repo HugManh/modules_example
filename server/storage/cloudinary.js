@@ -1,6 +1,5 @@
 const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const multer = require("multer");
+const streamifier = require('streamifier')
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -8,15 +7,19 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const storage = new CloudinaryStorage({
-    cloudinary,
-    folder: process.env.CLOUDINARY_FOLDER,
-    allowedFormats: ['jpg', 'png'],
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
-    }
-});
+function uploadSingle(file) {
+    return new Promise(resolve => {
+        console.log("result.secure_url: ", file);
+        let stream = cloudinary.uploader.upload_stream((error, result) => {
+            if (result) {
+                resolve(result);
+            } else {
+                reject(error);
+            }
+        });
 
-const uploadCloud = multer({ storage: storage })
+        streamifier.createReadStream(file.buffer).pipe(stream);
+    })
+}
 
-module.exports = { uploadCloud }
+module.exports = { uploadSingle }

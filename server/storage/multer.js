@@ -9,7 +9,7 @@ const _current_time = time.unixTimestamp();
 const pathTime = path.join(store, _current_time);
 
 // Set storage on the local filesytem
-const localStorage = multer.diskStorage({
+const _diskStorage = multer.diskStorage({
     destination: function (req, file, cb) {
         if (!fse.existsSync(store)) {
             mkdirSync(store)
@@ -23,7 +23,9 @@ const localStorage = multer.diskStorage({
         cb(null, file.originalname)
     }
 })
+const _memStorage = multer.memoryStorage();
 
-const upload = multer({ storage: localStorage })
+const uploadLocal = multer({ storage: _diskStorage }).single('file')
+const uploadMem = multer({ storage: _memStorage }).single('file');
 
-module.exports = { upload }
+module.exports = { uploadLocal, uploadMem }

@@ -5,8 +5,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import "./gallery.css";
 
-const apiUploadImage = process.env.API_ENDPOINT + "/api/v1/uploadImage";
-const apiGetAllImage = process.env.API_ENDPOINT + "/api/v1/images";
+const api_endpoint = "http://localhost:3000";
+const apiUploadImage = api_endpoint + "/api/v1/uploadImage";
+const apiGetAllImage = api_endpoint + "/api/v1/images";
 
 function App() {
   const [allImage, setAllImage] = useState();
@@ -133,11 +134,13 @@ function App() {
           : allImage.map((data, index) => {
               return (
                 <div className='pics' key={index}>
-                  <img
-                    src={data.url}
-                    alt={data.name}
-                    style={{ width: "100%" }}
-                  />
+                  <a href={data.url} target='_blank'>
+                    <img
+                      src={data.url}
+                      alt={data.name}
+                      style={{ width: "100%" }}
+                    />
+                  </a>
                 </div>
               );
             })}
