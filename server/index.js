@@ -5,12 +5,12 @@ const { imageRoute } = require("./routes")
 app.use(cors())
 
 app.get("/", (req, res) => {
-    res.send("Express on Vercel");
+    res.send("Hello World!");
 });
 app.use('/api/v1', imageRoute)
 
 // Start the server
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
     console.log("Starting server on port " + PORT + "...");
 })
