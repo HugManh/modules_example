@@ -7,7 +7,13 @@ const { imageRoute } = require("./routes")
 app.use(cors())
 
 
-app.use('api/v1', imageRoute)
+app.get('/', (req, res) => {
+    res.send({
+        message: "Hello, world!",
+        success: true
+    })
+})
+app.use('/api/v1', imageRoute)
 
 // Start the server
 const PORT = process.env.PORT || 3000
