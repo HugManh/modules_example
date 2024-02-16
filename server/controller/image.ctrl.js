@@ -1,11 +1,10 @@
 const fse = require('fs-extra');
 const path = require("path");
-const timers = require('../modules/time');
-const { image } = require('../modules');
+const { image, time } = require('../utils');
 const store = path.join(path.dirname(__dirname), 'localData');
 const localData = path.join(path.dirname(__dirname), 'localMetadata', 'data.json');
 const _url = "http://localhost:3000/api/v1";
-const _current_time = timers.unixTimestamp();
+const _current_time = time.unixTimestamp();
 
 const imageCtrl = {
     upload: async (req, res) => {
