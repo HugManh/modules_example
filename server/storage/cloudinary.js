@@ -7,19 +7,27 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-function uploadSingle(file) {
-    return new Promise(resolve => {
-        console.log("result.secure_url: ", file);
-        let stream = cloudinary.uploader.upload_stream((error, result) => {
-            if (result) {
-                resolve(result);
-            } else {
-                reject(error);
-            }
-        });
+const cloudinaryS = {
+    uploadSingleStream: (file) => {
+        return new Promise(resolve => {
+            let stream = cloudinary.uploader.upload_stream((error, result) => {
+                if (result) {
+                    resolve(result);
+                } else {
+                    reject(error);
+                }
+            });
 
-        streamifier.createReadStream(file.buffer).pipe(stream);
-    })
+            streamifier.createReadStream(file.buffer).pipe(stream);
+        })
+    },
+    uploadSingle: async (file) => {
+        const res = await cloudinary.uploader.upload(file, {
+            folder: "dino-gallery",
+            resource_type: "auto",
+        });
+        return res;
+    }
 }
 
-module.exports = { uploadSingle }
+module.exports = cloudinaryS

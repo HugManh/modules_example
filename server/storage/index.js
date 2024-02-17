@@ -1,8 +1,5 @@
-const { uploadLocal, uploadMem } = require("./multer")
-const { uploadSingle } = require("./cloudinary")
+const cloudinaryS = require("./cloudinary")
 
 module.exports = {
-    uploadLocal,
-    uploadMem,
-    uploadSingle
+    cloudinaryS
 }

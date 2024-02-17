@@ -1,18 +1,18 @@
-const imageRoute = require("express").Router();
-const { uploadLocal, uploadMem } = require('../storage');
+const imageRouter = require("express").Router();
+const { upload2Disk, upload2Mem } = require('../middleware/upload');
 const { imageCtrl } = require("../controller");
 
-imageRoute
+imageRouter
     .route('/uploadImage')
-    .post(uploadMem, imageCtrl.uploadImage);
-imageRoute
+    .post(upload2Mem, imageCtrl.uploadImage);
+imageRouter
     .route('/upload')
-    .post(uploadLocal, imageCtrl.upload);
-imageRoute
+    .post(upload2Disk, imageCtrl.upload);
+imageRouter
     .route('/images')
     .get(imageCtrl.getAll)
-imageRoute
-    .route('/:time/:name')
-    .get(uploadLocal, imageCtrl.getByName)
+// imageRouter
+//     .route('/:time/:name')
+//     .get(upload2Disk, imageCtrl.getByName)
 
-module.exports = imageRoute
+module.exports = imageRouter

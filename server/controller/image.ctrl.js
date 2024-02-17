@@ -1,61 +1,62 @@
 const fse = require('fs-extra');
-const path = require("path");
 const { time } = require('../utils');
-const { uploadSingle } = require('../storage');
-const store = path.join(path.dirname(__dirname), 'localData');
-const localData = path.join(path.dirname(__dirname), 'localMetadata', 'data.json');
-const _url = "http://localhost:3000/api/v1";
-const _current_time = time.unixTimestamp();
+const { localMetadata, localData } = require('../config');
+const { cloudinaryS } = require('../storage');
 
 const imageCtrl = {
     uploadImage: async (req, res) => {
+
         if (!req.file) {
-            res.status(404).json({ message: "No file uploaded!", success: false });
+            return res.status(400).json({ success: false, error: { code: 400, message: "No file uploaded!" } });
         }
         try {
-            console.log("req.file.path: ", req.file);
-            uploadSingle(req.file).then((result) => {
-                console.log(result);
-                res.json({
-                    message: "File upload completed successfully",
-                    data: { secure_url: result.secure_url },
-                    success: true,
-                })
+            const b64 = Buffer.from(req.file.buffer).toString("base64");
+            let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+            result = await cloudinaryS.uploadSingle(dataURI)
+            // result = await cloudinaryS.uploadSingleStream(req.file)
+            lists = await listDirection()
+            lists.push({ url: result.secure_url })
+            fse.writeFileSync(localMetadata, JSON.stringify(lists))
+            res.status(200).json({
+                success: true,
+                message: "File uploaded successfully",
+                data: {
+                    filename: req.file.originalname,
+                    type: req.file.mimetype,
+                    size: req.file.size,
+                    url: result.secure_url,
+                },
             })
-        } catch (error) {
-            res.status(404).json({
-                message: "File upload: " + error,
-                success: false,
-            })
+        } catch (e) {
+            return res.status(500).json({ success: false, error: { code: e.code, message: e.message } });
         }
     },
     upload: async (req, res) => {
         if (!req.file) {
-            res.status(404).json({ message: "No file uploaded!", success: false });
+            return res.status(400).json({ success: false, error: { code: 400, message: "No file uploaded!" } });
         }
         try {
-            pathFile = _current_time + '/' + req.file.originalname
             lists = await listDirection()
-            lists.push({ url: _url + "/" + pathFile, filename: req.file.originalname })
-            fse.writeFileSync(localData, JSON.stringify(lists))
+            lists.push({ url: req.file.path })
+            fse.writeFileSync(localMetadata, JSON.stringify(lists))
             res.status(200).json({
+                success: true,
                 message: "File uploaded successfully",
                 data: {
-                    file_path: pathFile,
-                    file_url: _url + '/' + pathFile
+                    filename: req.file.originalname,
+                    type: req.file.mimetype,
+                    size: req.file.size,
+                    url: req.file.path,
                 },
-                success: true,
             })
-        } catch (error) {
-            res.status(404).json({
-                message: "File upload: " + error,
-                success: false,
-            })
+        } catch (e) {
+            return res.status(500).json({ success: false, error: { code: e.code, message: e.message } });
         }
     },
     getAll: async (req, res) => {
         list = await listDirection()
         res.status(200).json({
+            success: true,
             message: "Get all images",
             data: list
         })
@@ -85,11 +86,11 @@ const imageCtrl = {
 }
 
 async function listDirection() {
-    if (!fse.existsSync(localData)) {
-        console.error("Not exits directory: ", localData)
-        return;
+    if (!fse.existsSync(localMetadata)) {
+        console.error("Not exits directory: ", localMetadata)
+        fse.writeJsonSync(localMetadata, [])
     }
-    jsonString = await fse.readFile(localData, "utf8")
+    jsonString = await fse.readFile(localMetadata, "utf8")
     listImage = JSON.parse(jsonString);
     return listImage
 }
