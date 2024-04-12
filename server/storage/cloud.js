@@ -1,13 +1,7 @@
-const cloudinary = require('cloudinary').v2;
-const streamifier = require('streamifier')
+const streamifier = require('streamifier');
+const { cloudinary } = require('../config');
 
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
-});
-
-const cloudinaryS = {
+const cloud = {
     uploadSingleStream: (file) => {
         return new Promise(resolve => {
             let stream = cloudinary.uploader.upload_stream((error, result) => {
@@ -30,4 +24,4 @@ const cloudinaryS = {
     }
 }
 
-module.exports = cloudinaryS
+module.exports = cloud

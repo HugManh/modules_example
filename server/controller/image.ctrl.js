@@ -1,41 +1,18 @@
 const fse = require('fs-extra');
 const { time } = require('../utils');
 const { localMetadata, localData } = require('../config');
-const { cloudinaryS } = require('../storage');
+const { cloud } = require('../storage');
 
 const imageCtrl = {
-    uploadImage: async (req, res) => {
-
+    upload: async (req, res) => {
         if (!req.file) {
             return res.status(400).json({ success: false, error: { code: 400, message: "No file uploaded!" } });
         }
         try {
             const b64 = Buffer.from(req.file.buffer).toString("base64");
             let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-            result = await cloudinaryS.uploadSingle(dataURI)
-            // result = await cloudinaryS.uploadSingleStream(req.file)
-            lists = await listDirection()
-            lists.push({ url: result.secure_url })
-            fse.writeFileSync(localMetadata, JSON.stringify(lists))
-            res.status(200).json({
-                success: true,
-                message: "File uploaded successfully",
-                data: {
-                    filename: req.file.originalname,
-                    type: req.file.mimetype,
-                    size: req.file.size,
-                    url: result.secure_url,
-                },
-            })
-        } catch (e) {
-            return res.status(500).json({ success: false, error: { code: e.code, message: e.message } });
-        }
-    },
-    upload: async (req, res) => {
-        if (!req.file) {
-            return res.status(400).json({ success: false, error: { code: 400, message: "No file uploaded!" } });
-        }
-        try {
+            result = await cloud.uploadSingle(dataURI)
+            // result = await cloud.uploadSingleStream(req.file)
             lists = await listDirection()
             lists.push({ url: req.file.path })
             fse.writeFileSync(localMetadata, JSON.stringify(lists))

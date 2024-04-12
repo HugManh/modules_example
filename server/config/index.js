@@ -1,3 +1,4 @@
+const { default: cloudinary } = require('./cloudinary')
 const { localData, localMetadata } = require('./constant')
 
-module.exports = { localData, localMetadata }
+module.exports = { localData, localMetadata , cloudinary}

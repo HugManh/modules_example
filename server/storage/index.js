@@ -1,5 +1,5 @@
-const cloudinaryS = require("./cloudinary")
+const cloud = require("./cloud")
 
 module.exports = {
-    cloudinaryS
+    cloud
 }

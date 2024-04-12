@@ -17,4 +17,6 @@ const upload2Disk = multer({ storage: _diskStorage }).single('file')
 const _memStorage = multer.memoryStorage();
 const upload2Mem = multer({ storage: _memStorage }).single('file');
 
-module.exports = { upload2Disk, upload2Mem }
+const upload = process.env.NODE_ENV !== 'production' ? upload2Mem : upload2Disk
+
+module.exports = { upload }
