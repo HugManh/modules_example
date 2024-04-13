@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors')
+require('dotenv').config()
 const { telegram } = require("./utils")
 
 /** middlewares */
@@ -12,10 +13,10 @@ const initRoutes = require("./routes");
 initRoutes(app)
 
 // Start the server
-const port = process.env.PORT || 3333
+const port = process.env.PORT || 8080
 try {
     app.listen(port, () => {
-        text = `Server connected to http://localhost:${port}`
+        text = `Server connected to http://localhost:${port}/ping`
         console.log(text);
         // telegram.sendMessageToTelegram(text)
     })

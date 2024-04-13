@@ -3,6 +3,7 @@ const { cloudinary } = require('../config');
 
 const cloud = {
     uploadSingleStream: (file) => {
+        console.log("cloudinary conf: ", cloudinary);
         return new Promise(resolve => {
             let stream = cloudinary.uploader.upload_stream((error, result) => {
                 if (result) {
@@ -15,12 +16,20 @@ const cloud = {
             streamifier.createReadStream(file.buffer).pipe(stream);
         })
     },
-    uploadSingle: async (file) => {
-        const res = await cloudinary.uploader.upload(file, {
-            folder: "dino-gallery",
-            resource_type: "auto",
-        });
-        return res;
+    uploadSingle: async (name, data) => {
+        try {
+            let now = new Date();
+            const objectPath = now.toLocaleDateString("zh-Hans-CN") 
+            await cloudinary.api.create_folder('dino-gallery/' + objectPath)
+            const res = await cloudinary.uploader.upload(data, {
+                folder: objectPath,
+                resource_type: "auto",
+            })
+            console.log("=======", res);
+            return res;
+        } catch (error) {
+            console.log("error===============", error);
+        }
     }
 }
 

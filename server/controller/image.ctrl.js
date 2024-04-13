@@ -10,8 +10,8 @@ const imageCtrl = {
         }
         try {
             const b64 = Buffer.from(req.file.buffer).toString("base64");
-            let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-            result = await cloud.uploadSingle(dataURI)
+            let database64 = "data:" + req.file.mimetype + ";base64," + b64;
+            result = await cloud.uploadSingle(req.file.originalname, database64)
             // result = await cloud.uploadSingleStream(req.file)
             lists = await listDirection()
             lists.push({ url: req.file.path })
