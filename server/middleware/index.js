@@ -1,6 +1,6 @@
-const { upload2Disk, upload2Mem } = require("./upload")
+const { upload, dataUri } = require("./upload")
 
 module.exports = {
-    upload2Disk,
-    upload2Mem
+    upload,
+    dataUri,
 }

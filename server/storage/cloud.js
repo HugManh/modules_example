@@ -1,36 +1,48 @@
-const streamifier = require('streamifier');
 const { cloudinary } = require('../config');
+const { dataUri } = require('../middleware');
+const streamifier = require('streamifier');
 
 const cloud = {
-    uploadSingleStream: (file) => {
-        console.log("cloudinary conf: ", cloudinary);
-        return new Promise(resolve => {
-            let stream = cloudinary.uploader.upload_stream((error, result) => {
-                if (result) {
-                    resolve(result);
-                } else {
-                    reject(error);
-                }
-            });
-
-            streamifier.createReadStream(file.buffer).pipe(stream);
-        })
-    },
-    uploadSingle: async (name, data) => {
+    upload: async (bucket, req) => {
         try {
             let now = new Date();
-            const objectPath = now.toLocaleDateString("zh-Hans-CN") 
-            await cloudinary.api.create_folder('dino-gallery/' + objectPath)
-            const res = await cloudinary.uploader.upload(data, {
-                folder: objectPath,
+            const objectPath = now.toLocaleDateString("zh-Hans-CN")
+            const folder = bucket + '/' + objectPath
+            const { originalname } = req.file
+            const options = {
+                folder,
                 resource_type: "auto",
-            })
-            console.log("=======", res);
-            return res;
+                use_filename: true,
+                unique_filename: false,
+                filename_override: originalname,
+            }
+            await cloudinary.api.create_folder(options.folder)
+            return process.env.BASE64 !== true ?
+                await uploadFromBuffer(req, options) :
+                await cloudinary.uploader.upload(
+                    dataUri(req).content,
+                    options,
+                );;
         } catch (error) {
             console.log("error===============", error);
         }
     }
 }
+
+let uploadFromBuffer = (req, options) => {
+    return new Promise((resolve, reject) => {
+        let cld_upload_stream = cloudinary.uploader.upload_stream(
+            options,
+            (error, result) => {
+                if (result) {
+                    resolve(result);
+                } else {
+                    reject(error);
+                }
+            }
+        );
+        streamifier.createReadStream(req.file.buffer).pipe(cld_upload_stream);
+    });
+};
 
 module.exports = cloud

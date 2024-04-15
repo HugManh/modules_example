@@ -1,8 +1,8 @@
 const { Router } = require('express')
-const imageRouter = require('./image.router')
+const fileRouter = require('./file.router')
 
 const router = new Router()
 
-router.use(imageRouter)
+router.use(fileRouter)
 
 module.exports = router

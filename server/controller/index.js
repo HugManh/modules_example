@@ -1,4 +1,4 @@
-const imageCtrl = require("./image.ctrl")
+const fileCtrl = require("./file.ctrl")
 module.exports = {
-    imageCtrl
+    fileCtrl
 }
