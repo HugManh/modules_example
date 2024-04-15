@@ -1,15 +1,15 @@
+require('dotenv').config()
 const express = require('express');
 const app = express();
 const cors = require('cors')
-require('dotenv').config()
 const { telegram } = require("./utils")
+const initRoutes = require("./routes");
 
 /** middlewares */
 app.use(express.json());
 app.use(cors())
 app.disable('x-powered-by');
 
-const initRoutes = require("./routes");
 initRoutes(app)
 
 // Start the server
