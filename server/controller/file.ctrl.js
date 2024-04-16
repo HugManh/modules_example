@@ -9,7 +9,6 @@ const fileCtrl = {
             return res.status(400).json({ success: false, error: { code: 400, message: "No file uploaded!" } });
         }
         try {
-            console.log("[Info] upload: ", req.file)
             const bucket = 'dino-gallery'
             result = await cloud.upload(bucket, req)
             // result = await cloud.uploadSingleStream(req.file)
@@ -34,7 +33,7 @@ const fileCtrl = {
             });
         }
     },
-    read: (req, resp) => {
+    read: async (req, resp) => {
         const { bucketname, objectpath, filename } = req.params;
         // resp.redirect(`${constant.endpoint}/${cloudinary.config().cloud_name}/${bucketname}/${objectpath}/${filename}`);
         // Dont use redirect
@@ -47,7 +46,6 @@ const fileCtrl = {
             `${constant.endpoint}/${cloudinary.config().cloud_name}/${bucketname}/${objectpath}/${filename}`,
             options,
             (res) => {
-                console.log('statusCode:', res.statusCode);
                 resp.set(res.headers)
                 res.pipe(resp);
             });
@@ -55,6 +53,34 @@ const fileCtrl = {
             console.error(e);
         });
         request.end();
+    },
+    list: async (req, resp) => {
+        const bucket = 'dino-gallery'
+        const data = await cloud.list(bucket)
+        let response = [];
+        for (v of data.resources) {
+            response.push({
+                asset_id: v.asset_id,
+                demo_url: "http://localhost:3000/api/v1/" + v.public_id,
+                format: v.format,
+                resource_type: v.resource_type,
+                bytes: v.bytes,
+                created_at: v.created_at,
+            })
+        }
+        resp.status(200).json({
+            data: response,
+            message: "List file in gallery",
+            success: true,
+        })
+    },
+    delete: async (req, resp) => {
+        const result = await cloud.delete(req)
+        resp.status(200).json({
+            data: result,
+            message: "Delete file successfully",
+            success: true,
+        })
     },
 }
 

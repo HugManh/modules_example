@@ -22,11 +22,30 @@ const cloud = {
                 await cloudinary.uploader.upload(
                     dataUri(req).content,
                     options,
-                );;
+                )
         } catch (error) {
             console.log("error===============", error);
         }
-    }
+    },
+    list: async (bucket) => {
+        try {
+            return await cloudinary.api.resources({
+                type: 'upload',
+                prefix: bucket // add your folder
+            })
+        } catch (error) {
+            console.log("error===============", error);
+        }
+    },
+    delete: async (req) => {
+        const { asset_id } = req.params
+        try {
+            const result = await cloudinary.api.resources_by_asset_ids(asset_id)
+            return await cloudinary.uploader.destroy(result.resources[0].public_id)
+        } catch (error) {
+            console.log("error===============", error);
+        }
+    },
 }
 
 let uploadFromBuffer = (req, options) => {

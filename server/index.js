@@ -16,7 +16,7 @@ initRoutes(app)
 const port = process.env.PORT || 8080
 try {
     app.listen(port, () => {
-        text = `Server connected to http://localhost:${port}/ping`
+        const text = `Server connected to http://localhost:${port}/ping`
         console.log(text);
         // telegram.sendMessageToTelegram(text)
     })
