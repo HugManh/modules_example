@@ -1,13 +1,9 @@
+import { useEffect, useState } from "react";
 import { Button, Spin, Upload, message } from "antd";
 import "antd/dist/reset.css";
 import "./App.css";
-import axios from "axios";
-import { useEffect, useState } from "react";
 import "./gallery.css";
-
-const api_endpoint = "http://localhost:3000";
-const apiUploadImage = api_endpoint + "/api/v1/uploadImage";
-const apiGetAllImage = api_endpoint + "/api/v1/images";
+import * as api from "./api";
 
 function App() {
   const [allImage, setAllImage] = useState();
@@ -15,13 +11,12 @@ function App() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    console.log("Use Effect");
     getImage();
   }, []);
 
   const getImage = async () => {
     try {
-      const result = await axios.get(apiGetAllImage);
+      const result = await api.getListFile();
       setAllImage(result.data.data);
     } catch (error) {
       console.log(error);
@@ -31,17 +26,16 @@ function App() {
   const uploadImage = async (options) => {
     const { onSuccess, onError, file, onProgress } = options;
 
-    const fmData = new FormData();
-    fmData.append("file", file);
+    const formData = new FormData();
+    formData.append("file", file);
     try {
-      const res = await axios.post(apiUploadImage, fmData);
+      const res = await api.apiUpload(formData);
 
       onSuccess("Ok");
       console.log("server res: ", res.data.data.file_url);
       setImage(res.data.data.file_url);
     } catch (err) {
       console.log("Error: ", err);
-      const error = new Error("Some error");
       onError({ err });
     }
   };
@@ -62,10 +56,14 @@ function App() {
         }}
       >
         <div>
-          {/* <Button onClick={() => {
-          !show ? setShow(true) : setShow(false)
-        }}>{show ? 'Enabled' : 'Disabled'}</Button>
-        <br /> */}
+          {/* <Button
+            onClick={() => {
+              !show ? setShow(true) : setShow(false);
+            }}
+          >
+            {show ? "Enabled" : "Disabled"}
+          </Button>
+          <br /> */}
           <Upload
             multiple
             listType='picture-card'
@@ -134,9 +132,9 @@ function App() {
           : allImage.map((data, index) => {
               return (
                 <div className='pics' key={index}>
-                  <a href={data.url} target='_blank'>
+                  <a href={data.demo_url} target='_blank'>
                     <img
-                      src={data.url}
+                      src={data.demo_url}
                       alt={data.name}
                       style={{ width: "100%" }}
                     />
