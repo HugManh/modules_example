@@ -1,0 +1,23 @@
+---
+name: codeQL
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [test]
+
+jobs:
+  analyze:
+    name: Static analysis with CodeQL
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript, python, ruby
+
+      - name: Build and analyze
+        uses: github/codeql-action/analyze@v2

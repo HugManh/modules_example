@@ -3,8 +3,7 @@ name: document
 on:
   workflow_dispatch:
   push:
-    branches:
-      - test
+    branches: [test]
 
 jobs:
   dependency-review:
@@ -26,3 +25,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
           cache-dependency-path: './${{ matrix.root-build }}/package-lock.json'
+      - name: "Install node_modules"
+        run: npm install
