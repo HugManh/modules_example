@@ -10,6 +10,10 @@ jobs:
   analyze:
     name: Static analysis with CodeQL
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["javascript-typescript"]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -17,7 +21,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
-          languages: javascript, python, ruby
+          languages: ${{matrix.language}}
 
       - name: Build and analyze
         uses: github/codeql-action/analyze@v2
