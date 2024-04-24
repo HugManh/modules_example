@@ -1,3 +1,4 @@
+---
 name: document
 
 on:
@@ -10,6 +11,7 @@ jobs:
     name: Dependency review
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         node-version: [18.x]
         root-build: [server]
