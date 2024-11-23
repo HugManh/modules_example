@@ -1,5 +1,3 @@
-import * as service from './request'
+import * as service from './request';
 
-export {
-    service
-}
+export { service };

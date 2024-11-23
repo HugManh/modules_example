@@ -1,6 +1,1 @@
-const { upload, dataUri } = require("./upload")
-
-module.exports = {
-    upload,
-    dataUri,
-}
+export * from './upload';

@@ -1,7 +1,10 @@
-const path = require('path')
+const path = require('path');
 
-module.exports = {
+export default {
     localData: path.join(path.dirname(__dirname), 'localData'),
-    localMetadata: path.join(path.dirname(__dirname), 'localMetadata', 'data.json'),
-    endpoint: 'https://res.cloudinary.com'
-}
+    localMetadata: path.join(
+        path.dirname(__dirname),
+        'localMetadata',
+        'data.json',
+    ),
+};

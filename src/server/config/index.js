@@ -1,4 +1,2 @@
-const cloudinary = require('./cloudinary')
-const constant = require('./constant')
-
-module.exports = { constant, cloudinary }
+export * as cloudinary from './cloudinary';
+export * as constant from './constant';

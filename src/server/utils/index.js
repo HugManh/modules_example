@@ -1,9 +1,9 @@
-const time = require('./time')
+const time = require('./time');
 // const image = require('./image')
-const telegram = require('./telegram')
+const telegram = require('./telegram');
 
 module.exports = {
-    time,
-    // image,
-    telegram
-}
+  time,
+  // image,
+  telegram,
+};

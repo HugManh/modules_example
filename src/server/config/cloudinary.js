@@ -1,3 +1,4 @@
+require('dotenv').config();
 const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
@@ -7,6 +8,6 @@ cloudinary.config({
     secure: true,
 });
 
-console.log("cloudinary Config:", cloudinary.config());
+console.log('cloudinary Config:', cloudinary.config());
 
-module.exports = cloudinary
+export default cloudinary;

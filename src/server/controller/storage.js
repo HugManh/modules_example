@@ -1,16 +1,20 @@
 const http = require('http');
 const https = require('https');
-const { storage } = require('./storage');
 const { cloudinary, constant } = require('../config');
 
 const storage = {
     upload: async (req, res) => {
         if (!req.file) {
-            return res.status(400).json({ success: false, error: { code: 400, message: "No file uploaded!" } });
+            return res
+                .status(400)
+                .json({
+                    success: false,
+                    error: { code: 400, message: 'No file uploaded!' },
+                });
         }
         try {
-            const bucket = 'dino-gallery'
-            result = await storage.upload(bucket, req)
+            const bucket = 'dino-gallery';
+            result = await storage.upload(bucket, req);
             // result = await storage.uploadSingleStream(req.file)
             // lists = await listDirection()
             // lists.push({ url: req.file.path })
@@ -19,13 +23,13 @@ const storage = {
                 data: {
                     public_id: result.public_id,
                     url: result.secure_url,
-                    demo_url: "http://localhost:3000/api/" + result.public_id,
+                    demo_url: 'http://localhost:3000/api/' + result.public_id,
                     size: result.bytes,
                     type: result.resource_type + '/' + result.format,
                 },
-                message: "File uploaded successfully",
+                message: 'File uploaded successfully',
                 success: true,
-            })
+            });
         } catch (e) {
             return res.status(500).json({
                 error: { code: e.code, message: e.message },
@@ -40,50 +44,50 @@ const storage = {
         const options = {
             method: 'GET',
         };
-        let ssl = true
+        let ssl = true;
         const transport = ssl ? https : http;
         const request = transport.request(
             `${constant.endpoint}/${cloudinary.config().cloud_name}/${bucketname}/${objectpath}/${filename}`,
             options,
             (res) => {
-                resp.set(res.headers)
+                resp.set(res.headers);
                 res.pipe(resp);
-            });
+            },
+        );
         request.on('error', (e) => {
             console.error(e);
         });
         request.end();
     },
     list: async (req, resp) => {
-        const bucket = 'dino-gallery'
-        const data = await storage.list(bucket)
+        const bucket = 'dino-gallery';
+        const data = await storage.list(bucket);
         let response = [];
         for (v of data.resources) {
             response.push({
                 asset_id: v.asset_id,
-                demo_url: "http://localhost:3000/api/" + v.public_id,
+                demo_url: 'http://localhost:3000/api/' + v.public_id,
                 format: v.format,
                 resource_type: v.resource_type,
                 bytes: v.bytes,
                 created_at: v.created_at,
-            })
+            });
         }
         resp.status(200).json({
             data: response,
-            message: "List file in gallery",
+            message: 'List file in gallery',
             success: true,
-        })
+        });
     },
     delete: async (req, resp) => {
-        const result = await storage.delete(req)
+        const result = await storage.delete(req);
         resp.status(200).json({
             data: result,
-            message: "Delete file successfully",
+            message: 'Delete file successfully',
             success: true,
-        })
+        });
     },
-}
-
+};
 
 // async function listDirection() {
 //     if (!fse.existsSync(localMetadata)) {

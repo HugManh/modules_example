@@ -16,5 +16,4 @@
 //     }
 // }
 
-
-// module.exports = image 
+// module.exports = image

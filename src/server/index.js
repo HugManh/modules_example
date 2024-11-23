@@ -1,26 +1,49 @@
-require('dotenv').config()
-const express = require('express');
-const app = express();
-const cors = require('cors')
-const { telegram } = require("./utils")
-const initRoutes = require("./routes");
+import http from 'http';
+// import https from 'https';
+// import fs from 'fs';
+// import path from 'path';
+import app from './app';
 
-/** middlewares */
-app.use(express.json());
-app.use(cors())
-app.disable('x-powered-by');
+// Start http server
+const HTTP_PORT = normalizePort(process.env.PORT || 8000);
+app.set('port', HTTP_PORT);
+const httpServer = http.createServer(app);
+httpServer.listen(HTTP_PORT, onListening);
 
-initRoutes(app)
+// Start https server
+// const HTTPS_PORT = normalizePort(process.env.HTTPS_PORT || 443);
+// app.set('https_port', HTTPS_PORT);
+// const options = {
+//     key: fs.readFileSync(path.join(__dirname, 'key')),
+//     cert: fs.readFileSync(path.join(__dirname, 'crt')),
+//     ca: fs.readFileSync(path.join(__dirname, 'ca')),
+// };
+// https.createServer(options, app).listen(HTTPS_PORT, onListening);
 
-// Start the server
-const port = process.env.PORT || 8080
-try {
-    app.listen(port, () => {
-        const text = `Server connected to http://localhost:${port}/ping`
-        console.log(text);
-        // telegram.sendMessageToTelegram(text)
-    })
+function onListening() {
+    let addr = this.address();
+    let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+    console.info('Web server listening on ' + bind);
 }
-catch (error) {
-    console.log('Cannot connect to the server: ', error)
+
+function normalizePort(val) {
+    let port = parseInt(val, 10);
+    if (isNaN(port)) return val;            // named pipe
+    if (port >= 0) return port;             // port number
+    return false;
 }
+
+const shutdown = () => {
+    console.info('[shutdown]', new Date());
+    process.exit(0);
+};
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
+
+process.on('uncaughtException', (err) => {
+    console.error('[uncaughtException]', err, err.stack);
+});
+
+process.on('unhandledRejection', (reason, p) => {
+    console.warn('[unhandledRejection] ', p, reason, reason ? reason.stack : undefined);
+});

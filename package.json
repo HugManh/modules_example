@@ -4,12 +4,14 @@
   "description": "gallery-dino",
   "main": "index.js",
   "engines": {
-    "node": "^18.x"
+    "node": ">=18.x"
   },
   "scripts": {
-    "start": "babel-node src/server",
-    "dev": "nodemon --exec ./node_modules/.bin/babel-node ./src/server",
     "build:server": "babel src/server -d build/server --copy-files --minified --no-comments",
+    "format": "prettier --write \"src/**/*.{js,ts}\" \"test/**/*.{js,ts}\"",
+    "start:prod": "babel-node src/server",
+    "start:dev": "nodemon --exec ./node_modules/.bin/babel-node ./src/server",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.{js,ts}\" --fix",
     "build": "npm run clean && npm run build:server",
     "clean": "rm -rf build && mkdir build",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,6 +22,7 @@
   "dependencies": {
     "@babel/runtime": "^7.24.7",
     "cloudinary": "^2.0.1",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "datauri": "^4.1.0",
     "dotenv": "^16.4.5",
@@ -33,13 +36,19 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.24.7",
-    "@babel/core": "^7.24.7",
+    "@babel/core": "^7.26.0",
+    "@babel/eslint-parser": "^7.25.9",
     "@babel/node": "^7.24.7",
     "@babel/plugin-syntax-optional-chaining": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.24.7",
     "@babel/preset-env": "^7.24.7",
     "babel-plugin-module-resolver": "^5.0.2",
+    "eslint": "^8.42.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^29.5.0",
     "nodemon": "^3.0.3",
+    "prettier": "^3.0.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0"
   }

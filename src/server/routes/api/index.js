@@ -1,8 +1,7 @@
-const { Router } = require('express')
-const storage = require('./storage');
+import { Router } from 'express';
+const router = new Router();
+import resource from './resource'
 
-const router = new Router()
+router.use('/resource', resource);
 
-router.use('/storage', storage)
-
-module.exports = router;
+export default router
