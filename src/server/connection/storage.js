@@ -5,7 +5,7 @@ const streamifier = require('streamifier');
 const storage = {
   upload: async (bucket, req) => {
     try {
-      let now = new Date();
+      const now = new Date();
       const objectPath = now.toLocaleDateString('zh-Hans-CN');
       const folder = bucket + '/' + objectPath;
       const { originalname } = req.file;
@@ -45,9 +45,9 @@ const storage = {
   },
 };
 
-let uploadFromBuffer = (req, options) => {
+const uploadFromBuffer = (req, options) => {
   return new Promise((resolve, reject) => {
-    let cld_upload_stream = cloudinary.uploader.upload_stream(
+    const cld_upload_stream = cloudinary.uploader.upload_stream(
       options,
       (error, result) => {
         if (result) {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let baseURL = process.env.API_URL || 'http://localhost:3000/api/v1';
+const baseURL = process.env.API_URL || 'http://localhost:3000/api/v1';
 
 export const service = axios.create({
   baseURL, // url = base url + request url

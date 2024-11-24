@@ -21,13 +21,13 @@ httpServer.listen(HTTP_PORT, onListening);
 // https.createServer(options, app).listen(HTTPS_PORT, onListening);
 
 function onListening() {
-    let addr = this.address();
-    let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+    const addr = this.address();
+    const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
     console.info('Web server listening on ' + bind);
 }
 
 function normalizePort(val) {
-    let port = parseInt(val, 10);
+    const port = parseInt(val, 10);
     if (isNaN(port)) return val;            // named pipe
     if (port >= 0) return port;             // port number
     return false;

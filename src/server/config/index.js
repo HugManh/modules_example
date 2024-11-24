@@ -1,2 +1,2 @@
 export * as cloudinary from './cloudinary';
-export * as constant from './constant';
+export * as constant from '../constant';

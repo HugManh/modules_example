@@ -1,4 +1,3 @@
-const storage = require('./storage');
-module.exports = {
-  storage,
-};
+// export * as storage from './storage';
+export { configure } from './configure';
+export { connection } from './connection';
