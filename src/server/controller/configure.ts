@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import fse from 'fs-extra';
 import { dbStorage } from '../constant';
 import crypto from 'crypto';
+import {logger} from "../helpers/logger";
 
 export const configure = {
   create: async (req: Request, res: Response) => {
@@ -25,7 +26,7 @@ export const configure = {
         try {
           data = JSON.parse(rawData);
         } catch (e) {
-          console.error('Dữ liệu cũ không hợp lệ!');
+          logger.error('Dữ liệu cũ không hợp lệ!');
         }
       }
 
@@ -134,8 +135,7 @@ export const configure = {
 const hashStr = (str: string, alg: string = 'sha256'): string => {
   const hash = crypto.createHash(alg);
   hash.update(str);
-  const hashValue = hash.digest('hex');
-  return hashValue;
+  return hash.digest('hex');
 };
 
 const handleError = (res: Response, e: unknown) => {

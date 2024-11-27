@@ -31,6 +31,10 @@ const formatter = winston.format.combine(
    }`;
  }),
 );
+
+const isDev= ()=>{
+    return true
+}
  
 class Logger {
   private readonly logger: winston.Logger;
@@ -44,9 +48,9 @@ class Logger {
      format: formatter,
    });
    this.logger = winston.createLogger({
-     level: isDevEnvironment() ? 'trace' : 'error',
+     level: isDev() ? 'trace' : 'error',
      levels: customLevels.levels,
-     transports: [isDevEnvironment() ? transport : prodTransport],
+     transports: [isDev() ? transport : prodTransport],
    });
    winston.addColors(customLevels.colors);
  }

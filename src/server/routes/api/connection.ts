@@ -3,6 +3,6 @@ import { connection } from '../../controller';
 
 const route = Router();
 
-route.route('/:storage_name/ping').post(connection.ping);
+route.route('/:cloud_storage/ping').post(connection.ping);
 
 export default route;
