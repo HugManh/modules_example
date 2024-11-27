@@ -1,15 +1,11 @@
 import {Request, Response} from "express";
 import {Cloudinary} from "../services";
+import BadRequestError from "../helpers/errors";
 
 export const resource = {
-    upload: async (req: Request, res: Response): Promise<any> => {
+    upload: async (req: Request, res: Response) => {
         if (!req.file) {
-            return res
-                .status(400)
-                .json({
-                    success: false,
-                    error: {code: 400, message: 'No file uploaded!'},
-                });
+            throw new BadRequestError({code: 400, message: "No file uploaded!", logging: true});
         }
         try {
             const {cloud_storage} = req.params;
