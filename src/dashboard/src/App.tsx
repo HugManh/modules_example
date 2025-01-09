@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import { bookStore } from './store/bookStore';
-import BookList from './components/BookList';
-import BookForm from './components/BookForm';
+import { bookStore } from '@/store';
+import BookForm from './components/book/BookForm';
+import BookList from './components/book/BookList';
 const App = () => {
   const reset = bookStore((state) => state.reset);
 
@@ -10,8 +10,7 @@ const App = () => {
   }, [reset]);
 
   return (
-    <div className="App">
-      <h2>My Library Store</h2>
+    <div className="App mt-10">
       <BookForm />
       <BookList />
     </div>
