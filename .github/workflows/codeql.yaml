@@ -1,0 +1,31 @@
+---
+name: codeQL
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [test]
+
+jobs:
+  analyze:
+    name: Static analysis with CodeQL
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["javascript-typescript"]
+        root-build: [server]
+    defaults:
+      run:
+        working-directory: "./${{matrix.root-build}}"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{matrix.language}}
+
+      - name: Build and analyze
+        uses: github/codeql-action/analyze@v2

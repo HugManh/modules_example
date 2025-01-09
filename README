@@ -1,6 +1,7 @@
 
 1. DIRECTORY STRUCTURE
 
-  gallery-dino/ ............. Top src dir
-  |-- client/ ............... Client
-  |-- server/ ............... Server
+    gallery-dino/ ................. Top src dir
+    |-- src/ ...................... 
+        |-- dashboard/ ............ Dashboard
+        |-- server/ ............... Server
