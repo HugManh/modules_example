@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import fse from 'fs-extra';
 import { StorageDB } from '../constant';
 import crypto from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 import { logger } from '../helpers/logger';
 import { Cloudinary } from '../services';
 
@@ -17,8 +18,7 @@ export const storageCtrl = {
         });
       }
 
-      let data: Record<string, any> = {}; // Khởi tạo data là một đối tượng trống
-      let id = hashStr(storage_name + '/' + cloud_storage);
+      let data = []; // Khởi tạo data là một đối tượng trống
 
       // Kiểm tra xem file đã tồn tại chưa và đọc dữ liệu cũ
       if (fse.existsSync(StorageDB)) {
@@ -30,12 +30,14 @@ export const storageCtrl = {
         }
       }
 
-      // Cập nhật hoặc thêm dữ liệu mới cho storage_name
-      data[id] = {
+      let storage_id = uuidv4();
+      const newStorage = {
+        id: storage_id,
         storage_name,
         cloud_storage,
         configure,
       };
+      data.push(newStorage);
 
       // Ghi lại toàn bộ dữ liệu vào file
       fse.writeFileSync(
@@ -45,7 +47,7 @@ export const storageCtrl = {
       );
 
       res.status(201).json({
-        data: { id, ...data[id] },
+        data: newStorage,
         message: `Created configuration for ${storage_name}`,
         success: true,
       });
@@ -70,16 +72,16 @@ export const storageCtrl = {
     try {
       const { storage_id } = req.params;
       const rawData = fse.readFileSync(StorageDB, 'utf8');
-      const data = JSON.parse(rawData);
-      const storage = data[storage_id];
-      if (data[storage_id]) {
+      const storages = JSON.parse(rawData);
+      const index = storages.findIndex((item: any) => item.id === storage_id);
+      if (index !== -1) {
         res.status(200).json({
-          data: storage,
+          data: storages[index],
           success: true,
         });
       } else {
         res.status(404).json({
-          message: `No configuration found for ${storage_id}`,
+          message: `No configuration found for '${storage_id}'`,
           success: false,
         });
       }
@@ -94,25 +96,20 @@ export const storageCtrl = {
 
       const rawData = fse.readFileSync(StorageDB, 'utf8');
       const data = JSON.parse(rawData);
-      let storage = data[storage_id];
-      if (storage) {
-        storage = {
-          ...storage,
-          storage_name,
-          configure,
-        };
-        data[storage_id] = storage;
+      const index = data.findIndex((item: any) => item.id === storage_id);
+      if (index !== -1) {
+        data[index] = { ...data[index], storage_name, configure };
 
         fse.writeFileSync(StorageDB, JSON.stringify(data, null, 2), 'utf8');
 
         res.status(200).json({
-          data: storage,
-          message: `Updated configuration for ${storage_id}`,
+          data: data[index],
+          message: `Updated configuration for '${storage_id}'`,
           success: true,
         });
       } else {
         res.status(404).json({
-          message: `No configuration found for ${storage_id}`,
+          message: `No configuration found for '${storage_id}'`,
           success: false,
         });
       }
@@ -125,15 +122,15 @@ export const storageCtrl = {
       const { storage_id } = req.params;
 
       const rawData = fse.readFileSync(StorageDB, 'utf8');
-      const data = JSON.parse(rawData);
-      const storage = data[storage_id];
-      if (storage) {
-        const { storage_name } = storage;
-        delete data[storage_id];
-        fse.writeFileSync(StorageDB, JSON.stringify(data, null, 2), 'utf8');
+      const storages = JSON.parse(rawData);
+      const index = storages.findIndex((item: any) => item.id === storage_id);
+      if (index !== -1) {
+        const { storage_name } = storages[index];
+        storages.splice(index, 1);
+        fse.writeFileSync(StorageDB, JSON.stringify(storages, null, 2), 'utf8');
 
         res.status(200).json({
-          message: `Deleted configuration for ${storage_name}`,
+          message: `Deleted configuration for '${storage_name}'`,
           success: true,
         });
       } else {
