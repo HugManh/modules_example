@@ -13,4 +13,5 @@ export const localMetadata = path.join(
   'data.json'
 );
 
-export const dbStorage = path.join(localData, 'storage.json');
+export const StorageDB = path.join(localData, 'storage.json');
+export const ResourceDB = path.join(localData, 'resource.json');

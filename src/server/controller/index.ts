@@ -1,3 +1,2 @@
-export { configure } from './configure';
-export { connection } from './connection';
+export { storageCtrl } from './storage';
 export { resource } from './resource';
