@@ -1,19 +1,7 @@
-import { useEffect } from 'react';
-import { bookStore } from '@/store';
-import BookForm from './components/book/BookForm';
-import BookList from './components/book/BookList';
+import { RouterProvider } from 'react-router';
+import router from './router';
+
 const App = () => {
-  const reset = bookStore((state) => state.reset);
-
-  useEffect(() => {
-    reset();
-  }, [reset]);
-
-  return (
-    <div className="App mt-10">
-      <BookForm />
-      <BookList />
-    </div>
-  );
+  return <RouterProvider router={router} />;
 };
 export default App;
