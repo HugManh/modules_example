@@ -3,15 +3,18 @@ import DashboardPage from './pages/dashboard/dashboard';
 import StoragePage from './pages/storages/storages';
 import LoginPage from './pages/login/login';
 import RegisterPage from './pages/register/register';
+import MainLayout from './layout/main-layout';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <DashboardPage />,
-  },
-  {
-    path: '/dashboard',
-    element: <DashboardPage />,
+    element: <MainLayout />,
+    children: [
+      {
+        path: '/dashboard',
+        element: <DashboardPage />,
+      },
+    ],
   },
   {
     path: '/auth',

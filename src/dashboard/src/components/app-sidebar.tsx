@@ -55,7 +55,7 @@ const data = {
       title: 'Dashboard',
       url: '/dashboard',
       icon: SquareTerminal,
-      isActive: true,
+      // isActive: true,
     },
     {
       title: 'Configure',

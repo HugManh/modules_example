@@ -13,7 +13,7 @@ import { Link } from 'react-router';
 export default function LoginPage() {
   return (
     <section className="flex justify-center items-center h-screen">
-      <Card>
+      <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
