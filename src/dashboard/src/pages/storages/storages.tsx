@@ -1,4 +1,4 @@
-import MainLayout from '@/layout/main-layout';
+import MainLayout from '@/layout/DashboardLayout';
 
 export default function StoragePage() {
   return (

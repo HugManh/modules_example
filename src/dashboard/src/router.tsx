@@ -3,7 +3,8 @@ import DashboardPage from './pages/dashboard/dashboard';
 import StoragePage from './pages/storages/storages';
 import LoginPage from './pages/login/login';
 import RegisterPage from './pages/register/register';
-import MainLayout from './layout/main-layout';
+import MainLayout from './layout/DashboardLayout';
+import AuthLayout from './layout/AuthLayout';
 
 const router = createBrowserRouter([
   {
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/auth',
-    // element: <AuthLayout />,
+    element: <AuthLayout />,
     children: [
       {
         path: 'login',
