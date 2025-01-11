@@ -109,6 +109,9 @@ export default function LoginPage() {
                 className="w-full"
                 disabled={mutation.isPending}
               >
+                {mutation.isPending && (
+                  <LoaderCircle className="animate-spin" />
+                )}
                 <span>Login</span>
               </Button>
               <Button
