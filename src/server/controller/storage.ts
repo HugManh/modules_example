@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { logger } from '../helpers/logger';
 import { Cloudinary } from '../services';
 
-export const storageCtrl = {
+export const storage = {
   create: async (req: Request, res: Response) => {
     try {
       const { storage_name, cloud_storage, ...configure } = req.body;

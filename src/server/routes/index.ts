@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import path from 'path';
-import api from './api';
+import v1Routes from './v1';
 const router = Router();
 
-// router.use('/api', assets);
-router.use('/api', api);
+router.use('/api/v1', v1Routes);
 router.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (err.code === 'LIMIT_FILE_SIZE') {
     res.status(413).send('File too large');

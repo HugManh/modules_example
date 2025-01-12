@@ -5,6 +5,21 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import routes from './routes';
 import path from 'path';
+import mongoose from 'mongoose';
+
+const connectDB = async () => {
+  const MONGO_URI =
+    'mongodb+srv://hugmahit:DeFbsi2yakQu3r5f@cluster0.gscff.mongodb.net/gallery-dino?retryWrites=true&w=majority';
+  try {
+    await mongoose.connect(MONGO_URI, {});
+    console.log('Connected to MongoDB');
+  } catch (error: any) {
+    console.error(`MongoDB connection error: ${error.message}`);
+    process.exit(1);
+  }
+};
+
+connectDB();
 
 const app = express();
 
