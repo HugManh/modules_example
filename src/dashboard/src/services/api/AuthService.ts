@@ -14,13 +14,9 @@ export const login = async (data: { email: string; password: string }) => {
       if (data.email === 'manh2909@gmail.com' && data.password) {
         resolve({
           status: 200,
+          statusText: 'OK',
           data: {
-            token: 'fake-jwt-token',
-            user: {
-              id: 1,
-              email: 'test@example.com',
-              name: 'Test User',
-            },
+            accessToken: 'fake-jwt-token',
           },
         });
       } else {
@@ -44,13 +40,9 @@ export const register = async (data: {
       if (data.email === 'manh2909@gmail.com' && data.password && data.name) {
         resolve({
           status: 200,
+          statusText: 'OK',
           data: {
-            token: 'fake-jwt-token',
-            user: {
-              id: 1,
-              email: 'test@example.com',
-              name: 'Test User',
-            },
+            accessToken: 'fake-jwt-token',
           },
         });
       } else {

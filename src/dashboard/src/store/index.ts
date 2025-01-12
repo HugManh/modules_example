@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-
+import { devtools, persist } from 'zustand/middleware';
 interface Book {
   id: string;
   name: string;
@@ -76,3 +76,22 @@ export const bookStore = create<IBook>((set) => ({
     });
   },
 }));
+
+interface IToken {
+  token: string;
+  setToken: (data: string) => void;
+}
+
+export const useTokenStore = create<IToken>()(
+  devtools(
+    persist(
+      (set) => ({
+        token: '',
+        setToken: (data: string) => {
+          set(() => ({ token: data }));
+        },
+      }),
+      { name: 'token-store' }
+    )
+  )
+);
