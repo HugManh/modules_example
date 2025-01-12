@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: '.env.local' });
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -9,7 +9,7 @@ import mongoose from 'mongoose';
 
 const connectDB = async () => {
   const MONGO_URI =
-    'mongodb+srv://hugmahit:DeFbsi2yakQu3r5f@cluster0.gscff.mongodb.net/gallery-dino?retryWrites=true&w=majority';
+  `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.gscff.mongodb.net/${process.env.MONGODB_DB}?retryWrites=true&w=majority`;
   try {
     await mongoose.connect(MONGO_URI, {});
     console.log('Connected to MongoDB');
