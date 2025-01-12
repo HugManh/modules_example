@@ -48,4 +48,41 @@ export const auth = {
       });
     }
   },
+  login: async (req: Request, res: Response): Promise<void> => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      res
+        .status(400)
+        .json({ success: false, message: 'Missing email and/or password' });
+      return;
+    }
+
+    try {
+      const user = await User.findOne({ email });
+      if (!user || !(await user.comparePassword(password))) {
+        res
+          .status(401)
+          .json({ success: false, message: 'Incorrect email or password' });
+        return;
+      }
+
+      // return token
+      const accessToken = jwt.sign(
+        { userId: user._id },
+        process.env.JWT_SECRET!,
+        { expiresIn: '1h' }
+      );
+
+      res.status(200).json({
+        success: true,
+        message: 'User logged in successfully',
+        accessToken,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: 'An error occurred in logging',
+      });
+    }
+  },
 };
