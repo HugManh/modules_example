@@ -90,8 +90,16 @@ export const auth = {
       const refreshToken = jwt.sign(
         { userId: user._id },
         process.env.JWT_SECRET!,
-        { expiresIn: '7h' }
+        { expiresIn: '7d' }
       );
+
+      // Set refreshToken in httpOnly cookie
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // Chỉ bật secure khi chạy production
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 ngày
+      });
 
       res.status(200).json({
         success: true,
