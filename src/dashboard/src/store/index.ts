@@ -77,18 +77,18 @@ export const bookStore = create<IBook>((set) => ({
   },
 }));
 
-interface IToken {
-  token: string;
+interface AuthState {
+  accessToken: string;
   setToken: (data: string) => void;
 }
 
-export const useTokenStore = create<IToken>()(
+export const useTokenStore = create<AuthState>()(
   devtools(
     persist(
       (set) => ({
-        token: '',
+        accessToken: '',
         setToken: (data: string) => {
-          set(() => ({ token: data }));
+          set(() => ({ accessToken: data }));
         },
       }),
       { name: 'token-store' }
