@@ -36,10 +36,24 @@ export const auth = {
         { expiresIn: '1h' }
       );
 
-      res.status(201).json({
+      const refreshToken = jwt.sign(
+        { userId: newUser._id },
+        process.env.JWT_SECRET!,
+        { expiresIn: '7h' }
+      );
+
+      res.status(200).json({
         success: true,
         message: 'User registered successfully',
-        accessToken,
+        data: {
+          user: {
+            id: newUser._id,
+            name: newUser.name,
+            email: newUser.email,
+          },
+          accessToken,
+          refreshToken,
+        },
       });
     } catch (error) {
       res.status(500).json({
@@ -73,15 +87,29 @@ export const auth = {
         { expiresIn: '1h' }
       );
 
+      const refreshToken = jwt.sign(
+        { userId: user._id },
+        process.env.JWT_SECRET!,
+        { expiresIn: '7h' }
+      );
+
       res.status(200).json({
         success: true,
         message: 'User logged in successfully',
-        accessToken,
+        data: {
+          user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+          },
+          accessToken,
+          refreshToken,
+        },
       });
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: 'An error occurred in logging',
+        message: 'Invalid credentials',
       });
     }
   },
