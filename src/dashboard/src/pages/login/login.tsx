@@ -38,7 +38,7 @@ export default function LoginPage() {
   //   };
 
   const navigate = useNavigate();
-  const { setToken, setUser } = useAuthStore((state) => state);
+  const { actions } = useAuthStore((state) => state);
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -47,8 +47,8 @@ export default function LoginPage() {
   const mutation = useMutation({
     mutationFn: login,
     onSuccess: (response) => {
-      setToken(response.data.data.accessToken);
-      setUser(response.data.data.user);
+      actions.setToken(response.data.data.accessToken);
+      actions.setUser(response.data.data.user);
       navigate('/dashboard');
     },
   });

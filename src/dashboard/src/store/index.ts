@@ -86,10 +86,12 @@ interface AuthState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
-  setUser: (user: User | null) => void;
-  setToken: (token: string | null) => void;
-  logout: () => void;
-  refreshToken: () => Promise<void>;
+  actions: {
+    setUser: (user: User | null) => void;
+    setToken: (token: string | null) => void;
+    logout: () => void;
+    refreshToken: () => Promise<void>;
+  };
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -99,33 +101,36 @@ export const useAuthStore = create<AuthState>()(
         user: null,
         token: null,
         isAuthenticated: false,
-        setUser: (user) => set({ user, isAuthenticated: !!user }),
-        setToken: (token) => {
-          set({ token: token });
-        },
-        logout: () => {
-          set({ user: null, token: null, isAuthenticated: false });
-          localStorage.removeItem('token-store'); // Xóa dữ liệu persist
-        },
-        refreshToken: async () => {
-          try {
-            // Ví dụ API làm mới token
-            const response = await fetch('/api/auth/refresh-token', {
-              method: 'POST',
-              credentials: 'include', // Để gửi cookie nếu cần
-            });
-            if (response.ok) {
-              const data = await response.json();
-              const { token, user } = data;
-              set({ token, user, isAuthenticated: true });
-            } else {
-              console.error('Failed to refresh token');
-              get().logout(); // Nếu làm mới thất bại, logout
+
+        actions: {
+          setUser: (user) => set({ user, isAuthenticated: !!user }),
+          setToken: (token) => {
+            set({ token: token });
+          },
+          logout: () => {
+            set({ user: null, token: null, isAuthenticated: false });
+            localStorage.removeItem('token-store'); // Xóa dữ liệu persist
+          },
+          refreshToken: async () => {
+            try {
+              // Ví dụ API làm mới token
+              const response = await fetch('/api/auth/refresh-token', {
+                method: 'POST',
+                credentials: 'include', // Để gửi cookie nếu cần
+              });
+              if (response.ok) {
+                const data = await response.json();
+                const { token, user } = data;
+                set({ token, user, isAuthenticated: true });
+              } else {
+                console.error('Failed to refresh token');
+                get().logout(); // Nếu làm mới thất bại, logout
+              }
+            } catch (error) {
+              console.error('Error refreshing token:', error);
+              get().logout();
             }
-          } catch (error) {
-            console.error('Error refreshing token:', error);
-            get().logout();
-          }
+          },
         },
       }),
       {
