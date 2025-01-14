@@ -77,21 +77,64 @@ export const bookStore = create<IBook>((set) => ({
   },
 }));
 
-interface AuthState {
-  accessToken: string;
-  setToken: (data: string) => void;
+interface User {
+  email: string;
+  name: string;
 }
 
-export const useTokenStore = create<AuthState>()(
+interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  setUser: (user: User | null) => void;
+  setToken: (token: string | null) => void;
+  logout: () => void;
+  refreshToken: () => Promise<void>;
+}
+
+export const useAuthStore = create<AuthState>()(
   devtools(
     persist(
-      (set) => ({
-        accessToken: '',
-        setToken: (data: string) => {
-          set(() => ({ accessToken: data }));
+      (set, get) => ({
+        user: null,
+        token: null,
+        isAuthenticated: false,
+        setUser: (user) => set({ user, isAuthenticated: !!user }),
+        setToken: (token) => {
+          set({ token: token });
+        },
+        logout: () => {
+          set({ user: null, token: null, isAuthenticated: false });
+          localStorage.removeItem('token-store'); // Xóa dữ liệu persist
+        },
+        refreshToken: async () => {
+          try {
+            // Ví dụ API làm mới token
+            const response = await fetch('/api/auth/refresh-token', {
+              method: 'POST',
+              credentials: 'include', // Để gửi cookie nếu cần
+            });
+            if (response.ok) {
+              const data = await response.json();
+              const { token, user } = data;
+              set({ token, user, isAuthenticated: true });
+            } else {
+              console.error('Failed to refresh token');
+              get().logout(); // Nếu làm mới thất bại, logout
+            }
+          } catch (error) {
+            console.error('Error refreshing token:', error);
+            get().logout();
+          }
         },
       }),
-      { name: 'token-store' }
+      {
+        name: 'token-store',
+        // onRehydrateStorage: () => (state) => {
+        //   console.log('Rehydrating state:', state);
+        // },
+        // Gọi hàm khi khôi phục trạng thái từ localStorage. Có thể thêm logic kiểm tra token đã hết hạn hay chưa.
+      }
     )
   )
 );

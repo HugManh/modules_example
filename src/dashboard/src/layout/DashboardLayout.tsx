@@ -13,14 +13,14 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { useTokenStore } from '@/store';
+import { useAuthStore } from '@/store';
 import { Navigate, Outlet } from 'react-router';
 
 export default function MainLayout() {
-  const token = useTokenStore((state) => state.token);
+  const { isAuthenticated } = useAuthStore((state) => state);
 
   // ""
-  if (token === '') {
+  if (!isAuthenticated) {
     return <Navigate to={'/auth/login'} replace />;
   }
 

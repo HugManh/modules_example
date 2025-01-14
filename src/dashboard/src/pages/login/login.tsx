@@ -14,7 +14,7 @@ import { useMutation } from '@tanstack/react-query';
 import { login } from '@/services/api/AuthService';
 import { LoaderCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useTokenStore } from '@/store';
+import { useAuthStore } from '@/store';
 
 export default function LoginPage() {
   //   const [formData, setFormData] = useState({
@@ -38,7 +38,7 @@ export default function LoginPage() {
   //   };
 
   const navigate = useNavigate();
-  const setToken = useTokenStore((state)=>state.setToken)
+  const { setToken, setUser } = useAuthStore((state) => state);
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -47,7 +47,8 @@ export default function LoginPage() {
   const mutation = useMutation({
     mutationFn: login,
     onSuccess: (response) => {
-      setToken(response.data.accessToken)
+      setToken(response.data.data.accessToken);
+      setUser(response.data.data.user);
       navigate('/dashboard');
     },
   });
