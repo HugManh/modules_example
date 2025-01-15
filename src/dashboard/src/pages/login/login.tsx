@@ -39,6 +39,7 @@ export default function LoginPage() {
 
   const navigate = useNavigate();
   const { actions } = useAuthStore((state) => state);
+  
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
