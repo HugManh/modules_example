@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { createStore, useStore } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { jwtDecode } from 'jwt-decode';
 import { z } from 'zod';
@@ -31,7 +31,7 @@ type AuthState = {
 export const decodeAccessToken = (accessToken: string) =>
   TokenDataSchema.parse(jwtDecode<TokenData>(accessToken));
 
-export const useAuthStore = create<AuthState>()(
+export const authStore = createStore<AuthState>()(
   devtools(
     persist(
       (set, get) => ({
@@ -46,7 +46,8 @@ export const useAuthStore = create<AuthState>()(
               try {
                 return accessToken ? decodeAccessToken(accessToken) : null;
               } catch (error) {
-                console.error(error);Role
+                console.error(error);
+                Role;
                 return null;
               }
             })();
@@ -83,3 +84,41 @@ export const useAuthStore = create<AuthState>()(
     )
   )
 );
+
+/**
+ * Required for zustand stores, as the lib doesn't expose this type
+ */
+export type ExtractState<S> = S extends {
+  getState: () => infer T;
+}
+  ? T
+  : never;
+
+type Params<U> = Parameters<typeof useStore<typeof authStore, U>>;
+
+// Selectors
+const accessTokenSelector = (state: ExtractState<typeof authStore>) =>
+  state.accessToken;
+const accessTokenDataSelector = (state: ExtractState<typeof authStore>) =>
+  state.accessTokenData;
+const refreshTokenSelector = (state: ExtractState<typeof authStore>) =>
+  state.refreshToken;
+const actionsSelector = (state: ExtractState<typeof authStore>) =>
+  state.actions;
+
+// getters
+export const getAccessToken = () => accessTokenSelector(authStore.getState());
+export const getAccessTokenData = () =>
+  accessTokenDataSelector(authStore.getState());
+export const getRefreshToken = () => refreshTokenSelector(authStore.getState());
+export const getActions = () => actionsSelector(authStore.getState());
+
+function useAuthStore<U>(selector: Params<U>[1]) {
+  return useStore(authStore, selector);
+}
+
+// Hooks
+export const useAccessToken = () => useAuthStore(accessTokenSelector);
+export const useAccessTokenData = () => useAuthStore(accessTokenDataSelector);
+export const useRefreshToken = () => useAuthStore(refreshTokenSelector);
+export const useActions = () => useAuthStore(actionsSelector);
