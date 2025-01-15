@@ -13,33 +13,11 @@ import { Link, useNavigate } from 'react-router';
 import { useMutation } from '@tanstack/react-query';
 import { login } from '@/services/api/AuthService';
 import { LoaderCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useAuthStore } from '@/store';
+import { getActions } from '@/store';
 
 export default function LoginPage() {
-  //   const [formData, setFormData] = useState({
-  //     email: '',
-  //     password: '',
-  //   });
-
-  //   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //     const { id, value } = e.target;
-  //     setFormData((prevData) => ({
-  //       ...prevData,
-  //       [id]: value,
-  //     }));
-  //   };
-
-  //   const handleLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //     e.preventDefault();
-  //     // Process form data
-  //     console.log('Form Data:', formData);
-  //     // You can send this data to your backend or API
-  //   };
-
   const navigate = useNavigate();
-  const { actions } = useAuthStore((state) => state);
-  
+  const { setAccessToken, setRefreshToken } = getActions();
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -48,8 +26,8 @@ export default function LoginPage() {
   const mutation = useMutation({
     mutationFn: login,
     onSuccess: (response) => {
-      actions.setToken(response.data.data.accessToken);
-      actions.setUser(response.data.data.user);
+      setAccessToken(response.data.data.accessToken);
+      setRefreshToken(response.data.data.refreshToken);
       navigate('/dashboard');
     },
   });

@@ -9,7 +9,7 @@ type Role = z.infer<typeof roles>;
 
 const TokenDataSchema = z.object({
   userId: z.string(),
-  roles,
+  // roles,
 });
 
 type TokenData = z.infer<typeof TokenDataSchema>;
@@ -47,13 +47,15 @@ export const authStore = createStore<AuthState>()(
                 return accessToken ? decodeAccessToken(accessToken) : null;
               } catch (error) {
                 console.error(error);
-                Role;
                 return null;
               }
             })();
+
+            console.log('------', accessTokenData, !!accessTokenData);
             set({
               accessToken,
               accessTokenData,
+              isAuthenticated: !!accessTokenData,
             });
           },
           setRefreshToken: (refreshToken: string | null) =>
@@ -65,12 +67,15 @@ export const authStore = createStore<AuthState>()(
             setAccessToken(CookieService.get(ACCESS_TOKEN_KEY));
             setRefreshToken(CookieService.get(REFRESH_TOKEN_KEY));
           },
-          clearTokens: () =>
+          clearTokens: () => {
             set({
               accessToken: null,
               accessTokenData: null,
               refreshToken: null,
-            }),
+              isAuthenticated: false,
+            });
+            localStorage.removeItem('token-store'); // Xóa dữ liệu persist
+          },
         },
       }),
       {
@@ -103,6 +108,8 @@ const accessTokenDataSelector = (state: ExtractState<typeof authStore>) =>
   state.accessTokenData;
 const refreshTokenSelector = (state: ExtractState<typeof authStore>) =>
   state.refreshToken;
+const isAuthenticatedSelector = (state: ExtractState<typeof authStore>) =>
+  state.isAuthenticated;
 const actionsSelector = (state: ExtractState<typeof authStore>) =>
   state.actions;
 
@@ -111,6 +118,8 @@ export const getAccessToken = () => accessTokenSelector(authStore.getState());
 export const getAccessTokenData = () =>
   accessTokenDataSelector(authStore.getState());
 export const getRefreshToken = () => refreshTokenSelector(authStore.getState());
+export const getIsAuthenticated = () =>
+  isAuthenticatedSelector(authStore.getState());
 export const getActions = () => actionsSelector(authStore.getState());
 
 function useAuthStore<U>(selector: Params<U>[1]) {

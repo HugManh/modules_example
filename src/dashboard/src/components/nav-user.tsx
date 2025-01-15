@@ -25,7 +25,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { useAuthStore } from '@/store';
+import { getActions } from '@/store';
 
 export function NavUser({
   user,
@@ -37,11 +37,10 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-  const { actions } = useAuthStore((state) => state);
-
+  const { clearTokens } = getActions();
   const logout = () => {
     console.log('Logging out!');
-    actions.logout();
+    clearTokens();
   };
 
   return (

@@ -13,11 +13,11 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { useAuthStore } from '@/store';
+import { getIsAuthenticated } from '@/store';
 import { Navigate, Outlet } from 'react-router';
 
 export default function MainLayout() {
-  const { isAuthenticated } = useAuthStore((state) => state);
+  const isAuthenticated = getIsAuthenticated();
 
   // ""
   if (!isAuthenticated) {
