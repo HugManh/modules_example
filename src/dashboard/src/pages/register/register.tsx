@@ -9,7 +9,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { register } from '@/services/api/AuthService';
-import { getActions } from '@/store';
+import { getActions, useAuthStore } from '@/store';
 import { useMutation } from '@tanstack/react-query';
 import { LoaderCircle } from 'lucide-react';
 import { useRef } from 'react';
@@ -17,7 +17,8 @@ import { Link, useNavigate } from 'react-router';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const { setAccessToken, setRefreshToken } = getActions();
+  // const { setAccessToken, setRefreshToken } = getActions();
+  const { setAccessToken } = useAuthStore();
 
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -28,7 +29,9 @@ export default function RegisterPage() {
     mutationFn: register,
     onSuccess: (response) => {
       setAccessToken(response.data.data.accessToken);
-      setRefreshToken(response.data.data.refreshToken);
+      // setRefreshToken(response.data.data.refreshToken);
+
+      // Redirect to dashboard page after successful registration
       navigate('/dashboard');
     },
   });

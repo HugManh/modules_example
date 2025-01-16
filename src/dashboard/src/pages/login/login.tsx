@@ -13,11 +13,13 @@ import { Link, useNavigate } from 'react-router';
 import { useMutation } from '@tanstack/react-query';
 import { login } from '@/services/api/AuthService';
 import { LoaderCircle } from 'lucide-react';
-import { getActions } from '@/store';
+import { useAuthStore } from '@/store';
+// import { getActions } from '@/store';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { setAccessToken, setRefreshToken } = getActions();
+  // const { setAccessToken, setRefreshToken } = getActions();
+  const { setAccessToken } = useAuthStore();
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -27,7 +29,8 @@ export default function LoginPage() {
     mutationFn: login,
     onSuccess: (response) => {
       setAccessToken(response.data.data.accessToken);
-      setRefreshToken(response.data.data.refreshToken);
+      // setRefreshToken(response.data.data.refreshToken);
+
       navigate('/dashboard');
     },
   });
