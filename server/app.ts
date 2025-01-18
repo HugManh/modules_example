@@ -1,27 +1,13 @@
 require('dotenv').config({ path: '.env.local' });
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response, NextFunction, Application } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import routes from './routes';
 import path from 'path';
-import mongoose from 'mongoose';
+import connectMongoDB from './connection/mongodb';
 
-const connectDB = async () => {
-  const MONGO_URI =
-  `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.gscff.mongodb.net/${process.env.MONGODB_DB}?retryWrites=true&w=majority`;
-  try {
-    await mongoose.connect(MONGO_URI, {});
-    console.log('Connected to MongoDB');
-  } catch (error: any) {
-    console.error(`MongoDB connection error: ${error.message}`);
-    process.exit(1);
-  }
-};
-
-connectDB();
-
-const app = express();
+const app: Application = express();
 
 // Default headers middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -69,5 +55,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     message: err.message || 'Internal Server Error',
   });
 });
+
+connectMongoDB();
 
 export default app;
