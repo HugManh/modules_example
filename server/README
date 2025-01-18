@@ -1,7 +1,27 @@
 
 1. DIRECTORY STRUCTURE
 
-    gallery-dino/ ................. Top src dir
-    |-- src/ ...................... 
-        |-- dashboard/ ............ Dashboard
-        |-- server/ ............... Server
+    project/
+    ├── src/
+    │   ├── config/          # Cấu hình cho Firebase hoặc MongoDB
+    │   │   ├── firebase.ts  # Kết nối Firebase
+    │   │   ├── mongodb.ts   # Kết nối MongoDB
+    │   ├── controllers/     # Xử lý logic request/response
+    │   │   ├── user.controller.ts
+    │   │   ├── post.controller.ts
+    │   ├── models/          # Các định nghĩa schema (cho MongoDB)
+    │   │   ├── user.model.ts
+    │   │   ├── post.model.ts
+    │   ├── routes/          # Khai báo route API
+    │   │   ├── index.ts
+    │   │   ├── user.routes.ts
+    │   │   ├── post.routes.ts
+    │   ├── utils/           # Các hàm tiện ích
+    │   │   ├── logger.ts
+    │   │   ├── constants.ts
+    │   ├── app.ts           # Khởi tạo ứng dụng Express
+    │   ├── server.ts        # Khởi chạy server
+    ├── .env                 # File chứa biến môi trường
+    ├── tsconfig.json        # Cấu hình TypeScript
+    ├── package.json         # Dependencies và script
+    └── README.md            # Hướng dẫn
