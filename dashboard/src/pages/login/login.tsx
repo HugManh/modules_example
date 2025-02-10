@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -28,6 +28,7 @@ export default function LoginPage() {
   const mutation = useMutation({
     mutationFn: login,
     onSuccess: (response) => {
+      // @ts-expect-error: response.data có kiểu unknown, cần ép kiểu
       setAccessToken(response.data.data.accessToken);
       // setRefreshToken(response.data.data.refreshToken);
 

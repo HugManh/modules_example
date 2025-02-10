@@ -1,11 +1,11 @@
-import { create, createStore, useStore } from 'zustand';
+import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { jwtDecode } from 'jwt-decode';
 import { z } from 'zod';
 
-const roles = z.enum(['admin', 'user']);
+// const roles = z.enum(['admin', 'user']);
 
-type Role = z.infer<typeof roles>;
+// type Role = z.infer<typeof roles>;
 
 const TokenDataSchema = z.object({
   userId: z.string(),

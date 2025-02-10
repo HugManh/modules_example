@@ -9,7 +9,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { register } from '@/services/api/AuthService';
-import { getActions, useAuthStore } from '@/store';
+import { useAuthStore } from '@/store';
 import { useMutation } from '@tanstack/react-query';
 import { LoaderCircle } from 'lucide-react';
 import { useRef } from 'react';
@@ -28,6 +28,7 @@ export default function RegisterPage() {
   const mutation = useMutation({
     mutationFn: register,
     onSuccess: (response) => {
+      // @ts-expect-error: response.data có kiểu unknown, cần ép kiểu
       setAccessToken(response.data.data.accessToken);
       // setRefreshToken(response.data.data.refreshToken);
 
@@ -53,14 +54,14 @@ export default function RegisterPage() {
   };
 
   return (
-    <section className="flex justify-center items-center h-screen">
-      <Card className="w-full max-w-sm">
+    <section className='flex justify-center items-center h-screen'>
+      <Card className='w-full max-w-sm'>
         <CardHeader>
-          <CardTitle className="text-2xl">Sign Up</CardTitle>
+          <CardTitle className='text-2xl'>Sign Up</CardTitle>
           <CardDescription>
             Enter your information to create an account <br />
             {mutation.isError && (
-              <span className="text-red-500 text-sm">
+              <span className='text-red-500 text-sm'>
                 {'Something went wrong'}
               </span>
             )}
@@ -68,39 +69,39 @@ export default function RegisterPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleRegisterSubmit}>
-            <div className="grid flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="name">Name</Label>
-                <Input ref={nameRef} id="name" placeholder="Max" required />
+            <div className='grid flex-col gap-6'>
+              <div className='grid gap-2'>
+                <Label htmlFor='name'>Name</Label>
+                <Input ref={nameRef} id='name' placeholder='Max' required />
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+              <div className='grid gap-2'>
+                <Label htmlFor='email'>Email</Label>
                 <Input
                   ref={emailRef}
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
+                  id='email'
+                  type='email'
+                  placeholder='m@example.com'
                   required
                 />
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
-                <Input ref={passwordRef} id="password" type="password" />
+              <div className='grid gap-2'>
+                <Label htmlFor='password'>Password</Label>
+                <Input ref={passwordRef} id='password' type='password' />
               </div>
               <Button
-                type="submit"
-                className="w-full"
+                type='submit'
+                className='w-full'
                 disabled={mutation.isPending}
               >
                 {mutation.isPending && (
-                  <LoaderCircle className="animate-spin" />
+                  <LoaderCircle className='animate-spin' />
                 )}
                 <span>Create an account</span>
               </Button>
             </div>
-            <div className="mt-4 text-center text-sm">
+            <div className='mt-4 text-center text-sm'>
               Already have an account?{' '}
-              <Link to={'/auth/login'} className="underline">
+              <Link to={'/auth/login'} className='underline'>
                 Sign in
               </Link>
             </div>
